@@ -142,7 +142,10 @@ export default function LoginPage ({ authModule }) {
 ```
 
 
-create `src/pages/auth.js` file and [#f03c15]REPLACE APP_ID
+create `src/pages/auth.js` file and 
+```diff
+! REPLACE APP_ID
+```
 
 `src/pages/auth.js`
 
