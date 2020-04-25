@@ -14,13 +14,6 @@ import HomePage from './pages/HomePage'
 import DashboardPage from './pages/DashboardPage'
 import { ProvideAuth, useAuth } from "./auth";
 
-import Directual from 'directual-api';
-const config = {
-  appID: '050e77bb-b0e6-4685-8712-a85774fad272',
-  apiHost: '/',
-}
-const api = new Directual(config);
-
 
 function PrivateRoute ({ children, ...rest }) {
   const auth = useAuth();
