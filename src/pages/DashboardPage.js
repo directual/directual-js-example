@@ -9,6 +9,7 @@ export default function DashBoardPage () {
   const auth = useAuth();
 
   useEffect( ()=>{
+    console.log('useEffect')
     api
       .structure('test')
       .getData('test', {sessionID:auth.sessionID})
@@ -25,7 +26,7 @@ export default function DashBoardPage () {
           //todo: api endpoint required authorisation
         }
       })
-  })
+  }, [])
 
 
   return (

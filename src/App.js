@@ -12,7 +12,7 @@ import './App.css'
 import LoginPage, { ProfileBlock } from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import DashboardPage from './pages/DashboardPage'
-import { ProvideAuth, useAuth } from "./auth";
+import { ProvideAuth, useAuth, authContext } from "./auth";
 
 
 function PrivateRoute ({ children, ...rest }) {
@@ -36,13 +36,24 @@ function PrivateRoute ({ children, ...rest }) {
   )
 }
 
-function App () {
-  useEffect( ()=>{
+class MainMenu extends React.Component{
+  render() {
+    const authContext = this.context;
+    return  <div> 
+      user is auth {authContext.isAutorised() ? 'true' : 'false'} 
+      user has role admin : {authContext.hasRole('admin') ? 'true' : 'false'}
+    </div>
+  }
+}
+MainMenu.contextType = authContext
 
-  })
+function App () {
   return ( <ProvideAuth>
     <Router>
       <div>
+        <hr />
+        <MainMenu />
+        <hr />
         <ul>
           <li>
             <Link to="/">Home</Link>

@@ -1,5 +1,5 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const API_HOST = 'http://localhost:8081'
+const API_HOST = process.env.API_HOST || 'https://api.alfa.directual.com'
 // !Important, set APP_ID in , env file or set you APP ID below
 const APP_ID = process.env.APP_ID
 module.exports = function(app) {

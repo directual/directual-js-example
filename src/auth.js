@@ -3,7 +3,7 @@ import Directual from 'directual-api';
 
 const api = new Directual({apiHost: '/'});
 
-const authContext = createContext();
+export const authContext = createContext();
 
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
@@ -18,6 +18,7 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
   const [sessionID, setSessionID] = useState(null);
+  const [role, setRole] = useState(null);
 
   const login = (username, password) => {
     return api.auth.login(username, password).then(res=>{
@@ -34,11 +35,20 @@ function useProvideAuth() {
     })
   };
 
+  const isAutorised = () => {
+    return !!user
+  }
+
+  const hasRole = (roleCheck) => {
+    return role === roleCheck
+  }
+
   useEffect(() => {
     api.auth.isAuthorize((status, token)=>{
       if(status === true){
         setUser(token.username)
         setSessionID(token.sessionID)
+        setRole(token.role)
       }
     })
   }, []);
@@ -47,6 +57,8 @@ function useProvideAuth() {
     user,
     sessionID,
     login,
-    signout
+    isAutorised,
+    signout,
+    hasRole
   };
 }

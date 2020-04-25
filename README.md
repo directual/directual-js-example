@@ -40,7 +40,7 @@ create `src/setupProxy.js` file in you src directory, and insert this text
 
 ```javascript
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const API_HOST = 'http://localhost:8081'
+const API_HOST = 'https://api.alfa.directual.com/'
 // !Important, set APP_ID in , env file or set you APP ID here
 const APP_ID = process.env.APP_ID
 
