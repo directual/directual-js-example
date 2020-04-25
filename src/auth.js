@@ -24,6 +24,8 @@ function useProvideAuth() {
     return api.auth.login(username, password).then(res=>{
       setUser(res.username)
       setSessionID(res.sessionID)
+      setRole(res.role)
+      window.localStorage.setItem('sid', res.sessionID)
     })
   };
 
@@ -31,6 +33,7 @@ function useProvideAuth() {
     return api.auth.logout('').then(res=>{
       setUser(null)
       setSessionID(null)
+      window.localStorage.setItem('sid', null)
       cb()
     })
   };
@@ -44,7 +47,8 @@ function useProvideAuth() {
   }
 
   useEffect(() => {
-    api.auth.isAuthorize((status, token)=>{
+    let sid = window.localStorage.getItem('sid') || ''
+    api.auth.isAuthorize(sid, (status, token)=>{
       if(status === true){
         setUser(token.username)
         setSessionID(token.sessionID)

@@ -3553,10 +3553,10 @@ dir-glob@2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-directual-api@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/directual-api/-/directual-api-1.2.4.tgz#bd50a0d67c72417c2167c5dfed34c83f12987833"
-  integrity sha512-a18J+gs0INpovDYrYEKr4fCR+cJgMO30AiDYqBxECMyfTAO1JVZVV6gWM9dZeYomNhUjjeumi+JDbQQ+OCZTLA==
+directual-api@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/directual-api/-/directual-api-1.2.6.tgz#56eddb42ecb3ceff9f738fa497bdbace61abb809"
+  integrity sha512-+lqDL6b6mG5HWMcJkO3qnUjfr/bHNFwPlyBi2xmQfGtcAwUPfsylo2k6G7f8VX0+HIzq915ZvrQyJM2JEcQTCA==
   dependencies:
     "@types/lodash" "4.14.104"
     axios "0.18.0"
