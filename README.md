@@ -11,10 +11,11 @@ go to home directory and run command:
 
 `npm init react-app directual-api-example`
 
-go to the your new project folder
+go to the your new project folder:
+
 `cd directual-api-example`
 
-and install necessary react-router-dom, directual-api:
+and install necessary libs: react-router-dom, directual-api:
 
 `npm install react-router-dom --save `
 
@@ -25,7 +26,7 @@ and install necessary react-router-dom, directual-api:
 
 ## Step 2: create middleware proxy to directual.api, for resolve problem linked with CORS
 
-create `setupProxy.js` file in you src directory, and insert this text
+create `src/setupProxy.js` file in you src directory, and insert this text
 
 ```javascript
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -153,7 +154,7 @@ create `src/pages/auth.js` file and
 import React, { useState, useEffect, useContext, createContext } from "react";
 import Directual from 'directual-api';
 const config = {
-  appID: '050e77bb-b0e6-4685-8712-a85774fad272',
+  appID: '__APP_ID__',
   apiHost: '/',
 }
 const api = new Directual(config);
