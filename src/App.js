@@ -36,6 +36,7 @@ function PrivateRoute ({ children, ...rest }) {
   )
 }
 
+//example how use standart components
 class MainMenu extends React.Component{
   render() {
     const authContext = this.context;

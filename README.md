@@ -169,18 +169,16 @@ export default function LoginPage ({ authModule }) {
 
 
 create `src/pages/auth.js` file and 
-```diff
-! REPLACE APP_ID
-```
 
 `src/pages/auth.js`
 
 ```javascript
 import React, { useState, useEffect, useContext, createContext } from "react";
 import Directual from 'directual-api';
+
 const api = new Directual({apiHost: '/'});
 
-const authContext = createContext();
+export const authContext = createContext();
 
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
@@ -195,11 +193,14 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
   const [sessionID, setSessionID] = useState(null);
+  const [role, setRole] = useState(null);
 
   const login = (username, password) => {
     return api.auth.login(username, password).then(res=>{
       setUser(res.username)
       setSessionID(res.sessionID)
+      setRole(res.role)
+      window.localStorage.setItem('sid', res.sessionID)
     })
   };
 
@@ -207,15 +208,26 @@ function useProvideAuth() {
     return api.auth.logout('').then(res=>{
       setUser(null)
       setSessionID(null)
+      window.localStorage.setItem('sid', null)
       cb()
     })
   };
 
+  const isAutorised = () => {
+    return !!user
+  }
+
+  const hasRole = (roleCheck) => {
+    return role === roleCheck
+  }
+
   useEffect(() => {
-    api.auth.isAuthorize((status, token)=>{
+    let sid = window.localStorage.getItem('sid') || ''
+    api.auth.isAuthorize(sid, (status, token)=>{
       if(status === true){
         setUser(token.username)
         setSessionID(token.sessionID)
+        setRole(token.role)
       }
     })
   }, []);
@@ -224,7 +236,9 @@ function useProvideAuth() {
     user,
     sessionID,
     login,
-    signout
+    isAutorised,
+    signout,
+    hasRole
   };
 }
 ```
@@ -272,6 +286,19 @@ function PrivateRoute ({ children, ...rest }) {
     />
   )
 }
+//example how use standart components
+
+class MainMenu extends React.Component{
+  render() {
+    const authContext = this.context;
+    return  <div> 
+      user is auth {authContext.isAutorised() ? 'true' : 'false'} 
+      user has role admin : {authContext.hasRole('admin') ? 'true' : 'false'}
+    </div>
+  }
+}
+MainMenu.contextType = authContext
+
 
 function App () {
   useEffect( ()=>{
@@ -288,6 +315,9 @@ function App () {
             <Link to="/dashboard">Dashboard</Link>
           </li>
         </ul>
+
+        <hr />
+        <MainMenu />
 
         <ProfileBlock />
 
@@ -360,7 +390,7 @@ export default function DashBoardPage () {
           //todo: api endpoint required authorisation
         }
       })
-  })
+  }, [])
   return (
     <div>
       <h2>Dashboard</h2>
