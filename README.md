@@ -26,19 +26,44 @@ and install necessary libs: react-router-dom, directual-api:
 
 ## Step 2: create middleware proxy to directual.api, for resolve problem linked with CORS
 
+
+create file `.env` in root directory with you APP_ID,
+example:
+`.env`
+
+`APP_ID=050e77bb-b0e6-4685-8712-a85774fad272`
+
+You can find APP_ID in Api -> API keys section on [Directual](https://my.directual.com), 
+
+
 create `src/setupProxy.js` file in you src directory, and insert this text
 
 ```javascript
 const { createProxyMiddleware } = require('http-proxy-middleware');
- module.exports = function(app) {
-   app.use(
-     '/good/api',
-     createProxyMiddleware({
-       target: 'https://api.alfa.directual.com',
-       changeOrigin: true,
-     })
-   );
- };
+const API_HOST = 'http://localhost:8081'
+// !Important, set APP_ID in , env file or set you APP ID here
+const APP_ID = process.env.APP_ID
+
+module.exports = function(app) {
+  app.use(
+    '/good/api',
+    createProxyMiddleware({
+      target: API_HOST,
+      changeOrigin: true,
+      pathRewrite(pathReq, req) {
+        const pathname = pathReq.split('?')[0];
+        let url = `${pathname}?appID=${APP_ID}`;
+        url = Object
+          .entries(req.query)
+          .reduce(
+            (newUrl, [key, value]) => `${newUrl}&${key}=${encodeURI(value)}`,
+            url,
+          );
+        return url;
+      }
+    })
+  );
+};
 ```
 
 
@@ -54,7 +79,7 @@ You will also see any lint errors in the console.
 
 ....
 
-## Step 4: embed a simple structure
+## Step 4: create a simple structure
 create `pages` folder and insert 3 files
 
 `src/pages/DashboardPage.js`
@@ -153,11 +178,7 @@ create `src/pages/auth.js` file and
 ```javascript
 import React, { useState, useEffect, useContext, createContext } from "react";
 import Directual from 'directual-api';
-const config = {
-  appID: '__APP_ID__',
-  apiHost: '/',
-}
-const api = new Directual(config);
+const api = new Directual({apiHost: '/'});
 
 const authContext = createContext();
 
@@ -315,11 +336,7 @@ Example result page: `src/pages/DashboardPage.js`
 import React, { useEffect, useState } from 'react'
 import Directual from 'directual-api';
 import { useAuth } from '../auth'
-const config = {
-  appID: '050e77bb-b0e6-4685-8712-a85774fad272',
-  apiHost: '/',
-}
-const api = new Directual(config);
+const api = new Directual({apiHost: '/'});
 
 export default function DashBoardPage () {
   const [payload, setPayload] = useState([]);

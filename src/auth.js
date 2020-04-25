@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import Directual from 'directual-api';
-const config = {
-  appID: '050e77bb-b0e6-4685-8712-a85774fad272',
-  apiHost: '/',
-}
-const api = new Directual(config);
+
+const api = new Directual({apiHost: '/'});
 
 const authContext = createContext();
 

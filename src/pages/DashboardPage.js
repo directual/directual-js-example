@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Directual from 'directual-api';
 import { useAuth } from '../auth'
-const config = {
-  appID: '050e77bb-b0e6-4685-8712-a85774fad272',
-  apiHost: '/',
-}
-const api = new Directual(config);
+const api = new Directual({apiHost: '/'});
 
 export default function DashBoardPage () {
   const [payload, setPayload] = useState([]);
