@@ -110,7 +110,7 @@ export default function DashBoardPage () {
 `src/pages/LoginPage.js`
 ```javascript
 import { useHistory, useLocation } from 'react-router-dom'
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react';
 import { ProvideAuth, useAuth } from "./../auth";
 
 export function ProfileBlock () {
@@ -143,6 +143,11 @@ export default function LoginPage ({ authModule }) {
   let { from } = location.state || { from: { pathname: '/' } }
   const auth = useAuth();
 
+  useEffect(() => {
+    if(auth.isAutorised()){
+      history.replace(from);
+    }
+  })
   let login = () => {
     auth.login(username, password).then(()=>{
       history.replace(from);

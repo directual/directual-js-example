@@ -43,6 +43,9 @@ function useProvideAuth() {
   }
 
   const hasRole = (roleCheck) => {
+    if(!roleCheck){
+      return true
+    }
     return role === roleCheck
   }
 

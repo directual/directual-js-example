@@ -1,6 +1,10 @@
 import { useHistory, useLocation } from 'react-router-dom'
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react';
 import { ProvideAuth, useAuth } from "./../auth";
+
+export function AccessDenied () {
+  return <div>AccessDenied</div>
+}
 
 export function ProfileBlock () {
   let history = useHistory()
@@ -39,6 +43,12 @@ export default function LoginPage ({ authModule }) {
       setError("You login or password incorrect")
     })
   }
+
+  useEffect(() => {
+    if(auth.isAutorised()){
+      history.replace(from);
+    }
+  })
 
   return (
     <div>

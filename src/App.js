@@ -9,21 +9,21 @@ import {
   useLocation
 } from 'react-router-dom'
 import './App.css'
-import LoginPage, { ProfileBlock } from './pages/LoginPage'
+import LoginPage, { ProfileBlock, AccessDenied } from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import DashboardPage from './pages/DashboardPage'
 import { ProvideAuth, useAuth, authContext } from "./auth";
 
 
-function PrivateRoute ({ children, ...rest }) {
+function PrivateRoute ({ children, hasRole, ...rest }) {
   const auth = useAuth();
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.user ? (
+        auth.isAutorised() && auth.hasRole(hasRole) ? (
           children
-        ) : (
+        ) : auth.isAutorised() && !auth.hasRole(hasRole) ? <AccessDenied /> : (
           <Redirect
             to={{
               pathname: '/login',
@@ -75,7 +75,7 @@ function App () {
           <Route exact path="/">
             <HomePage />
           </Route>
-          <PrivateRoute path="/dashboard">
+          <PrivateRoute path="/dashboard" hasRole={'admin'}>
             <DashboardPage />
           </PrivateRoute>
         </Switch>
