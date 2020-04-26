@@ -23,7 +23,7 @@ function useProvideAuth() {
   const login = (username, password) => {
     return api.auth.login(username, password).then(res=>{
       setUser(res.username)
-      setSessionID(res.sessionID)
+      setSessionID(res.token)
       setRole(res.role)
       window.localStorage.setItem('sid', res.sessionID)
     })
@@ -53,8 +53,9 @@ function useProvideAuth() {
     let sid = window.localStorage.getItem('sid') || ''
     api.auth.isAuthorize(sid, (status, token)=>{
       if(status === true){
+        debugger
         setUser(token.username)
-        setSessionID(token.sessionID)
+        setSessionID(token.token)
         setRole(token.role)
       }
     })
