@@ -408,8 +408,75 @@ export default function DashBoardPage () {
 }
 ```
 
+# Step 4: Build and pack you product in docker container
+
+## Create Docker file in root directory
+Create `Dockerfile` with following body:
+
+```
+FROM node:14.0.0-buster-slim
+ENV BUILD_PATH /usr/src/app
+ENV COMMIT_SHORT COMMIT_PLACEHOLDER
+ENV DOCKER_TAG TAG_PLACEHOLDER
+
+RUN mkdir -p $BUILD_PATH
+WORKDIR $BUILD_PATH
+COPY . $BUILD_PATH
+RUN npm install
+RUN npm run build
+
+FROM node:14.0.0-buster-slim
+
+ENV SERVER_FOLDER /opt/app/
+RUN mkdir -p $SERVER_FOLDER
+WORKDIR $SERVER_FOLDER
+
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
+
+RUN npm install --global express && npm link express && \
+npm install --global http-proxy-middleware && npm link http-proxy-middleware
+
+ENV NODE_SERVER_PORT=${NODE_SERVER_PORT:-8080}
+
+COPY server/ $SERVER_FOLDER/server
+RUN mkdir -p $SERVER_FOLDER/src
+COPY src/setupProxy.js $SERVER_FOLDER/src/setupProxy.js
+COPY --from=0 /usr/src/app/build $SERVER_FOLDER/build
+
+EXPOSE $NODE_SERVER_PORT $NODE_INSPECT_PORT
+
+ENTRYPOINT exec node ./server/server.js
+
+```
 
 
+Create proxy server in server directory:
+
+`server/server.js`
 
 
+```
+const path = require('path');
+const express = require('express');
+const proxy = require('../src/setupProxy')
+const SERVER_PORT = 8080;
+
+const app = express();
+app.use(express.static(path.join(__dirname, '../build')));
+proxy(app)
+
+const server = app.listen(SERVER_PORT, () => {
+  console.log(`start webserver: http://localhost:${SERVER_PORT} \nAPP ID: ${process.env.APP_ID} `);
+});
+
+module.exports = app;
+```
+
+## Build docker image
+run command: `docker build -t final_image_name .`
+
+## Run you image
+
+`docker run -d -p 8080:8080 -e APP_ID='__YOU_APP_ID__' final_image_name`
 
